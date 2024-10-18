@@ -1,35 +1,42 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import './App.css';
-import UserCard from './UserCard';
+import Header from './Header';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import About from './About';
+ import Home from './Home';
+import Contact from './Contact';
+import Profile from './Profile';
+import { useState } from 'react';
+
+//1) Links comming from Header Component (its just front end part)
+//2) Here we are connecting those links to components
+//3) Home is having all users data
 
 function App() {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState('');
 
+  const handleSendMessage = (newMessage) => {
+    setMessage(newMessage);
+  }
 
-  useEffect(() => {
-    axios.get('http://localhost:5000/users')
-      .then(response => {
-        setUsers(response.data);
-        setLoading(false);
-      })
-      .catch(() => alert('error occuring during fetching the users'));
-  }, []);
-
-  if (loading) return <h2>Loading...</h2>;
 
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-      {users.map(user => (
-        <UserCard key={user.id} user={user} />
-      ))}
+
+    console.log(`this is form app.js ${message}`),
+
+    <div>
+
+      <Router>
+        <Header onSendMessage={handleSendMessage} />
+        <Routes>
+          <Route path="/" element={<Home message={message}/>} />
+          <Route path="/About" element={<About />} />
+          <Route path="/Contact" element={<Contact />} />
+          <Route path="/Profile" element={<Profile />} />
+
+        </Routes>
+      </Router>
     </div>
   )
-
 }
-
-
-
 
 export default App;
